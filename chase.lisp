@@ -1,3 +1,5 @@
+(defun init-playfield ()
+
 (setf *playfield* (make-array '(10 10)
 		    :initial-contents '(("#" "#" "#" "#" "#" "#" "#" "#" "#" "#")
 					("#" " " " " " " " " " " " " " " " " "#")
@@ -8,7 +10,7 @@
 					("#" " " " " " " " " " " " " " " " " "#")
 					("#" " " " " " " " " " " " " " " " " "#")
 					("#" " " " " " " " " " " " " " " " " "#")
-					("#" "#" "#" "#" "#" "#" "#" "#" "#" "#"))))
+					("#" "#" "#" "#" "#" "#" "#" "#" "#" "#")))))
 
 (defun init-internal-fences ()
   (dotimes (n 10)
@@ -29,8 +31,8 @@
    (aref *playfield*
 	 (nth 0 *player-coords*) (nth 1 *player-coords*)) "@"))
 
-(defvar *user-input* nil)
-(defvar *old-coords* nil)
+(defparameter *user-input* nil)
+(defparameter *old-coords* nil)
 
 (defun print-2d-array-as-table (array)
   (loop for i from 0 below (array-dimension array 0)
@@ -41,34 +43,47 @@
                     (princ #\Space)))))
 
 (defun main-loop ()
-  
 
-(loop 
-     (print-2d-array-as-table *playfield*)
+  (loop
+     (print-2d-array-as-table *playfield*)   
      (setq *user-input* (read))
-   (game-state)
-   (when (equal *user-input* 'quit) (return))))
+     
+     (setf *old-coords* *player-coords*)
+     
+     (game-state)
 
-(defun game-state ()
-  (setf *old-coords* *player-coords*)
+      (when (equal "#"
+	 (aref *playfield*
+	      (nth 0 *player-coords*)
+	      (nth 1 *player-coords*)))
+
+	(setf *player-coords* *old-coords*))
 
   (setf
+    (aref *playfield*
+	  (nth 0 *player-coords*) (nth 1 *player-coords*)) "@")
+
+     (when (equal *user-input* 'quit) (return))))
+
+
+(defun game-state ()
+
+(setf
    (aref *playfield*
 	 (nth 0 *old-coords*) (nth 1 *old-coords*)) " ")
-    
+  
   (cond
     ((equal *user-input* 8)
      (decf (nth 0 *player-coords*)))
+
     ((equal *user-input* 2)
      (incf (nth 0 *player-coords*)))
+
     ((equal *user-input* 4)
      (decf (nth 1 *player-coords*)))
-    ((equal *user-input* 6)
-     (incf (nth 1 *player-coords*))))
-      
-  (setf
-   (aref *playfield*
-	 (nth 0 *player-coords*) (nth 1 *player-coords*)) "@"))
-  
 
+    ((equal *user-input* 6)
+     (incf (nth 1 *player-coords*)))))
+
+ 
 
