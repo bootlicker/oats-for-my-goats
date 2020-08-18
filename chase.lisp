@@ -58,20 +58,16 @@
   
   (cond
     ((equal *user-input* 8)     
-     (setf move-vector '(-1 0))
-     (print "move up"))
+     (setf move-vector '(-1 0)))
     
     ((equal *user-input* 2)
-     (setf move-vector '(1 0))
-     (print "move down"))
+     (setf move-vector '(1 0)))
     
     ((equal *user-input* 4)
-     (setf move-vector '(0 -1))
-     (print "move left"))
+     (setf move-vector '(0 -1)))
     
     ((equal *user-input* 6)
-     (setf move-vector '(0 1))
-     (print "move right"))))
+     (setf move-vector '(0 1)))))
 
 (defun game-state ()
 
@@ -83,9 +79,7 @@
   (when (equal "#"
 	       (aref *playfield*
 		     (nth 0 check-move)
-		     (nth 1 check-move)))
-
-    (print "bump!"))
+		     (nth 1 check-move))))
 
   (if (equal " "
 	       (aref *playfield*
