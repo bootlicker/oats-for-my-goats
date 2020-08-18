@@ -55,38 +55,42 @@
 
 (defun game-state ()
 
-  (setf old-coords *player-coords*)
+  (setf old-coords (copy-list *player-coords*))
+  (setf check-move *player-coords*)
   
   (cond
     ((equal *user-input* 8)
-     (setf move-vector '(-1 0)))
+     (setf move-vector '(-1 0))
+     (print "move up"))
     
     ((equal *user-input* 2)
-     (setf move-vector '(1 0)))
+     (setf move-vector '(1 0))
+     (print "move down"))
     
     ((equal *user-input* 4)
-     (setf move-vector '(0 -1)))
+     (setf move-vector '(0 -1))
+     (print "move left"))
     
     ((equal *user-input* 6)
-     (setf move-vector '(0 1))))
+     (setf move-vector '(0 1))
+     (print "move right")))
 
-  (setf check-move *player-coords*)
   (map 'vector #'+ check-move move-vector)
  
   (when (equal "#"
 	       (aref *playfield*
-		     (nth 0 move-vector)
-		     (nth 1 move-vector)))
+		     (nth 0 check-move)
+		     (nth 1 check-move)))
 
     (print "bump!"))
 
   (if (equal " "
 	       (aref *playfield*
-		     (nth 0 move-vector)
-		     (nth 1 move-vector)))
+		     (nth 0 check-move)
+		     (nth 1 check-move)))
 
       (progn
-	(setf *player-coords* move-vector)
+	(setf *player-coords* check-move)
 	
 	(setf
 	 (aref *playfield*
