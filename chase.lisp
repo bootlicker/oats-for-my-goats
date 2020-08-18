@@ -47,43 +47,55 @@
   (loop
      (print-2d-array-as-table *playfield*)   
      (setq *user-input* (read))
-     
-     (setf *old-coords* *player-coords*)
-     
+
      (game-state)
-
-      (when (equal "#"
-	 (aref *playfield*
-	      (nth 0 *player-coords*)
-	      (nth 1 *player-coords*)))
-
-	(setf *player-coords* *old-coords*))
-
-  (setf
-    (aref *playfield*
-	  (nth 0 *player-coords*) (nth 1 *player-coords*)) "@")
 
      (when (equal *user-input* 'quit) (return))))
 
 
 (defun game-state ()
 
-(setf
-   (aref *playfield*
-	 (nth 0 *old-coords*) (nth 1 *old-coords*)) " ")
+  (setf old-coords *player-coords*)
   
   (cond
     ((equal *user-input* 8)
-     (decf (nth 0 *player-coords*)))
-
+     (setf move-vector '(-1 0)))
+    
     ((equal *user-input* 2)
-     (incf (nth 0 *player-coords*)))
-
+     (setf move-vector '(1 0)))
+    
     ((equal *user-input* 4)
-     (decf (nth 1 *player-coords*)))
-
+     (setf move-vector '(0 -1)))
+    
     ((equal *user-input* 6)
-     (incf (nth 1 *player-coords*)))))
+     (setf move-vector '(0 1))))
+
+  (setf check-move *player-coords*)
+  (map 'vector #'+ check-move move-vector)
+ 
+  (when (equal "#"
+	       (aref *playfield*
+		     (nth 0 move-vector)
+		     (nth 1 move-vector)))
+
+    (print "bump!"))
+
+  (if (equal " "
+	       (aref *playfield*
+		     (nth 0 move-vector)
+		     (nth 1 move-vector)))
+
+      (progn
+	(setf *player-coords* move-vector)
+	
+	(setf
+	 (aref *playfield*
+	       (nth 0 *old-coords*) (nth 1 *old-coords*)) " ")
+
+	(setf
+	 (aref *playfield*
+	       (nth 0 *player-coords*) (nth 1 *player-coords*)) "@"))))
+  
 
  
 
