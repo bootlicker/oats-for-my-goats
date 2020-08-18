@@ -76,6 +76,7 @@
 (defun game-state ()
 
   (setf check-move *player-coords*)
+  (setf *old-coords* *player-coords*)
 
   (setf check-move (map 'list #'+ check-move move-vector))
  
