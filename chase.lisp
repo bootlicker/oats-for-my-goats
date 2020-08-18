@@ -47,19 +47,17 @@
   (loop
      (print-2d-array-as-table *playfield*)   
      (setq *user-input* (read))
-
+     (parse-input)
      (game-state)
-
      (when (equal *user-input* 'quit) (return))))
 
 
-(defun game-state ()
+(defun parse-input ()
 
-  (setf old-coords (copy-list *player-coords*))
-  (setf check-move *player-coords*)
+
   
   (cond
-    ((equal *user-input* 8)
+    ((equal *user-input* 8)     
      (setf move-vector '(-1 0))
      (print "move up"))
     
@@ -73,9 +71,13 @@
     
     ((equal *user-input* 6)
      (setf move-vector '(0 1))
-     (print "move right")))
+     (print "move right"))))
 
-  (map 'vector #'+ check-move move-vector)
+(defun game-state ()
+
+  (setf check-move *player-coords*)
+
+  (setf check-move (map 'list #'+ check-move move-vector))
  
   (when (equal "#"
 	       (aref *playfield*
